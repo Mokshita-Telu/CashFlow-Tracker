@@ -1,0 +1,410 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CashFlow Tracker - Personal Finance Manager</title>
+    
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    
+    <!-- Bootstrap Icons -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css" rel="stylesheet">
+    
+    <!-- Custom CSS -->
+    <link href="style.css" rel="stylesheet">
+<script src="https://sites.super.myninja.ai/_assets/ninja-daytona-script.js"></script>
+</head>
+<body>
+    <!-- Sidebar Overlay (for mobile) -->
+    <div class="sidebar-overlay" id="sidebarOverlay"></div>
+    
+    <!-- Sidebar Navigation -->
+    <aside class="sidebar" id="sidebar">
+        <div class="sidebar-header">
+            <h2><i class="bi bi-cash-stack"></i> CashFlow</h2>
+        </div>
+        <nav class="nav-menu">
+            <a class="nav-item active" data-section="dashboard">
+                <i class="bi bi-grid-1x2-fill"></i>
+                <span>Dashboard</span>
+            </a>
+            <a class="nav-item" data-section="add-transaction">
+                <i class="bi bi-plus-circle-fill"></i>
+                <span>Add Transaction</span>
+            </a>
+            <a class="nav-item" data-section="transactions">
+                <i class="bi bi-list-ul"></i>
+                <span>Transactions</span>
+            </a>
+            <a class="nav-item" data-section="summary">
+                <i class="bi bi-pie-chart-fill"></i>
+                <span>Summary</span>
+            </a>
+            <a class="nav-item" data-section="settings">
+                <i class="bi bi-gear-fill"></i>
+                <span>Settings</span>
+            </a>
+        </nav>
+    </aside>
+    
+    <!-- Main Content Area -->
+    <main class="main-content" id="mainContent">
+        <!-- Top Header -->
+        <header class="top-header">
+            <div class="d-flex align-items-center">
+                <button class="toggle-btn" id="toggleSidebar">
+                    <i class="bi bi-list"></i>
+                </button>
+                <h1 class="page-title ms-3" id="pageTitle">Dashboard</h1>
+            </div>
+            <div class="d-flex align-items-center gap-3">
+                <span class="badge bg-primary" id="transactionCount">0 transactions</span>
+            </div>
+        </header>
+        
+        <!-- Section 1: Dashboard -->
+        <section class="content-section active" id="dashboard">
+            <div class="container-fluid">
+                <div class="row g-4 mb-4">
+                    <!-- Total Balance Card -->
+                    <div class="col-12 col-md-4">
+                        <div class="stat-card">
+                            <div class="d-flex justify-content-between align-items-start">
+                                <div>
+                                    <h3>Total Balance</h3>
+                                    <div class="amount" id="totalBalance">$0.00</div>
+                                </div>
+                                <div class="icon balance">
+                                    <i class="bi bi-wallet2"></i>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Total Income Card -->
+                    <div class="col-12 col-md-4">
+                        <div class="stat-card">
+                            <div class="d-flex justify-content-between align-items-start">
+                                <div>
+                                    <h3>Total Income</h3>
+                                    <div class="amount positive" id="totalIncome">$0.00</div>
+                                </div>
+                                <div class="icon income">
+                                    <i class="bi bi-graph-up-arrow"></i>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Total Expenses Card -->
+                    <div class="col-12 col-md-4">
+                        <div class="stat-card">
+                            <div class="d-flex justify-content-between align-items-start">
+                                <div>
+                                    <h3>Total Expenses</h3>
+                                    <div class="amount negative" id="totalExpenses">$0.00</div>
+                                </div>
+                                <div class="icon expense">
+                                    <i class="bi bi-graph-down-arrow"></i>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Recent Transactions Preview -->
+                <div class="row">
+                    <div class="col-12">
+                        <div class="form-card">
+                            <h4 class="mb-4"><i class="bi bi-clock-history me-2"></i>Recent Transactions</h4>
+                            <div id="recentTransactions">
+                                <div class="empty-state">
+                                    <i class="bi bi-receipt"></i>
+                                    <p>No transactions yet. Add your first transaction!</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+        
+        <!-- Section 2: Add Transaction -->
+        <section class="content-section" id="add-transaction">
+            <div class="container-fluid">
+                <div class="row justify-content-center">
+                    <div class="col-12 col-lg-6">
+                        <div class="form-card">
+                            <h4 class="mb-4"><i class="bi bi-plus-circle me-2"></i>Add New Transaction</h4>
+                            
+                            <!-- Alert Messages -->
+                            <div id="formAlert"></div>
+                            
+                            <form id="transactionForm">
+                                <input type="hidden" id="editTransactionId" value="">
+                                
+                                <div class="mb-3">
+                                    <label class="form-label">Transaction Type <span class="text-danger">*</span></label>
+                                    <div class="d-flex gap-3">
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="radio" name="transactionType" id="typeIncome" value="income">
+                                            <label class="form-check-label" for="typeIncome">
+                                                <i class="bi bi-arrow-up-circle text-success me-1"></i>Income
+                                            </label>
+                                        </div>
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="radio" name="transactionType" id="typeExpense" value="expense" checked>
+                                            <label class="form-check-label" for="typeExpense">
+                                                <i class="bi bi-arrow-down-circle text-danger me-1"></i>Expense
+                                            </label>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <div class="mb-3">
+                                    <label for="amount" class="form-label">Amount <span class="text-danger">*</span></label>
+                                    <div class="input-group">
+                                        <span class="input-group-text">$</span>
+                                        <input type="number" class="form-control" id="amount" placeholder="0.00" step="0.01" min="0.01" required>
+                                    </div>
+                                </div>
+                                
+                                <div class="mb-3">
+                                    <label for="category" class="form-label">Category <span class="text-danger">*</span></label>
+                                    <select class="form-select" id="category" required>
+                                        <option value="">Select a category</option>
+                                        <optgroup label="Expenses" id="expenseCategories">
+                                            <option value="Food">🍔 Food & Dining</option>
+                                            <option value="Travel">✈️ Travel</option>
+                                            <option value="Shopping">🛍️ Shopping</option>
+                                            <option value="Bills">📄 Bills & Utilities</option>
+                                            <option value="Entertainment">🎬 Entertainment</option>
+                                            <option value="Health">🏥 Health</option>
+                                            <option value="Education">📚 Education</option>
+                                            <option value="Transport">🚗 Transport</option>
+                                            <option value="Other Expense">📦 Other</option>
+                                        </optgroup>
+                                        <optgroup label="Income" id="incomeCategories" style="display: none;">
+                                            <option value="Salary">💼 Salary</option>
+                                            <option value="Freelance">💻 Freelance</option>
+                                            <option value="Investment">📈 Investment</option>
+                                            <option value="Gift">🎁 Gift</option>
+                                            <option value="Other Income">💰 Other Income</option>
+                                        </optgroup>
+                                    </select>
+                                </div>
+                                
+                                <div class="mb-3">
+                                    <label for="date" class="form-label">Date <span class="text-danger">*</span></label>
+                                    <input type="date" class="form-control" id="date" required>
+                                </div>
+                                
+                                <div class="mb-4">
+                                    <label for="note" class="form-label">Note (Optional)</label>
+                                    <textarea class="form-control" id="note" rows="2" placeholder="Add a note..."></textarea>
+                                </div>
+                                
+                                <div class="d-flex gap-2">
+                                    <button type="submit" class="btn btn-primary flex-grow-1" id="submitBtn">
+                                        <i class="bi bi-plus-lg me-2"></i>Add Transaction
+                                    </button>
+                                    <button type="button" class="btn btn-outline-secondary" id="cancelEdit" style="display: none;">
+                                        Cancel
+                                    </button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+        
+        <!-- Section 3: Transactions -->
+        <section class="content-section" id="transactions">
+            <div class="container-fluid">
+                <!-- Filter Section -->
+                <div class="filter-card">
+                    <div class="row g-3 align-items-end">
+                        <div class="col-12 col-md-3">
+                            <label class="form-label">Filter by Type</label>
+                            <select class="form-select" id="filterType">
+                                <option value="all">All Types</option>
+                                <option value="income">Income</option>
+                                <option value="expense">Expense</option>
+                            </select>
+                        </div>
+                        <div class="col-12 col-md-3">
+                            <label class="form-label">Filter by Category</label>
+                            <select class="form-select" id="filterCategory">
+                                <option value="all">All Categories</option>
+                            </select>
+                        </div>
+                        <div class="col-12 col-md-3">
+                            <label class="form-label">Filter by Time</label>
+                            <select class="form-select" id="filterTime">
+                                <option value="all">All Time</option>
+                                <option value="today">Today</option>
+                                <option value="week">This Week</option>
+                                <option value="month">This Month</option>
+                            </select>
+                        </div>
+                        <div class="col-12 col-md-3">
+                            <button class="btn btn-outline-secondary w-100" id="clearFilters">
+                                <i class="bi bi-x-circle me-2"></i>Clear Filters
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Transactions List -->
+                <div class="form-card">
+                    <div class="d-flex justify-content-between align-items-center mb-4">
+                        <h4 class="mb-0"><i class="bi bi-list-ul me-2"></i>All Transactions</h4>
+                        <span class="text-muted" id="filteredCount">Showing all transactions</span>
+                    </div>
+                    <div id="transactionsList">
+                        <div class="empty-state">
+                            <i class="bi bi-receipt"></i>
+                            <p>No transactions found</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+        
+        <!-- Section 4: Summary -->
+        <section class="content-section" id="summary">
+            <div class="container-fluid">
+                <!-- Monthly Summary Cards -->
+                <div class="row g-4 mb-4">
+                    <div class="col-12 col-md-6">
+                        <div class="summary-card">
+                            <h5 class="mb-3"><i class="bi bi-calendar3 me-2"></i>Monthly Income</h5>
+                            <div class="d-flex justify-content-between align-items-center">
+                                <div>
+                                    <h2 class="text-success mb-0" id="monthlyIncome">$0.00</h2>
+                                    <small class="text-muted">This month's earnings</small>
+                                </div>
+                                <div class="icon income" style="width: 60px; height: 60px; font-size: 1.75rem;">
+                                    <i class="bi bi-graph-up-arrow"></i>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-12 col-md-6">
+                        <div class="summary-card">
+                            <h5 class="mb-3"><i class="bi bi-calendar3 me-2"></i>Monthly Expenses</h5>
+                            <div class="d-flex justify-content-between align-items-center">
+                                <div>
+                                    <h2 class="text-danger mb-0" id="monthlyExpenses">$0.00</h2>
+                                    <small class="text-muted">This month's spending</small>
+                                </div>
+                                <div class="icon expense" style="width: 60px; height: 60px; font-size: 1.75rem;">
+                                    <i class="bi bi-graph-down-arrow"></i>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Category Breakdown -->
+                <div class="row">
+                    <div class="col-12 col-lg-6">
+                        <div class="summary-card">
+                            <h5 class="mb-4"><i class="bi bi-tags me-2"></i>Expense by Category</h5>
+                            <div id="expenseBreakdown">
+                                <div class="empty-state py-4">
+                                    <i class="bi bi-pie-chart" style="font-size: 2rem;"></i>
+                                    <p class="mb-0">No expense data available</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-12 col-lg-6">
+                        <div class="summary-card">
+                            <h5 class="mb-4"><i class="bi bi-tags me-2"></i>Income by Category</h5>
+                            <div id="incomeBreakdown">
+                                <div class="empty-state py-4">
+                                    <i class="bi bi-pie-chart" style="font-size: 2rem;"></i>
+                                    <p class="mb-0">No income data available</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+        
+        <!-- Section 5: Settings -->
+        <section class="content-section" id="settings">
+            <div class="container-fluid">
+                <div class="row justify-content-center">
+                    <div class="col-12 col-lg-6">
+                        <div class="form-card">
+                            <h4 class="mb-4"><i class="bi bi-gear me-2"></i>Settings</h4>
+                            
+                            <div class="setting-item">
+                                <div>
+                                    <h6 class="mb-1">Dark Mode</h6>
+                                    <small class="text-muted">Switch between light and dark theme</small>
+                                </div>
+                                <div class="form-check form-switch">
+                                    <input class="form-check-input" type="checkbox" id="darkModeToggle">
+                                </div>
+                            </div>
+                            
+                            <div class="setting-item">
+                                <div>
+                                    <h6 class="mb-1">Clear All Data</h6>
+                                    <small class="text-muted">Delete all transactions and reset the app</small>
+                                </div>
+                                <button class="btn btn-outline-danger btn-sm" id="clearAllData">
+                                    <i class="bi bi-trash me-1"></i>Clear Data
+                                </button>
+                            </div>
+                            
+                            <div class="setting-item">
+                                <div>
+                                    <h6 class="mb-1">Export Data</h6>
+                                    <small class="text-muted">Download your transactions as JSON</small>
+                                </div>
+                                <button class="btn btn-outline-primary btn-sm" id="exportData">
+                                    <i class="bi bi-download me-1"></i>Export
+                                </button>
+                            </div>
+                            
+                            <div class="setting-item border-0">
+                                <div>
+                                    <h6 class="mb-1">Import Data</h6>
+                                    <small class="text-muted">Import transactions from JSON file</small>
+                                </div>
+                                <input type="file" id="importData" accept=".json" style="display: none;">
+                                <button class="btn btn-outline-success btn-sm" id="importBtn">
+                                    <i class="bi bi-upload me-1"></i>Import
+                                </button>
+                            </div>
+                        </div>
+                        
+                        <div class="form-card mt-4">
+                            <h4 class="mb-4"><i class="bi bi-info-circle me-2"></i>About</h4>
+                            <p class="text-muted mb-2">
+                                <strong>CashFlow Tracker</strong> is a simple, privacy-focused personal finance manager.
+                            </p>
+                            <p class="text-muted mb-0">
+                                All data is stored locally in your browser. No data is sent to any server.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+    
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    
+    <!-- Custom JavaScript -->
+    <script src="script.js"></script>
+</body>
+</html>
