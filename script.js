@@ -11,6 +11,7 @@
  * Transaction data store
  */
 let transactions = [];
+let openingBalance = 0;
 
 /**
  * Load transactions from localStorage
