@@ -2,22 +2,22 @@
 
 /* Root Variables for Theming */
 :root {
-    --sidebar-width: 260px;
-    --sidebar-collapsed-width: 0px;
-    --primary-color: #4f46e5;
-    --primary-hover: #4338ca;
-    --success-color: #10b981;
-    --danger-color: #ef4444;
-    --warning-color: #f59e0b;
-    --bg-light: #f8fafc;
-    --bg-dark: #0f172a;
+    --primary-color: #111827;     /* near black */
+    --primary-hover: #374151;     /* soft gray */
+    --success-color: #16a34a;     /* keep green for income */
+    --danger-color: #dc2626;      /* keep red for expenses */
+
+    --bg-light: #f9fafb;
+    --bg-dark: #020617;
+
     --card-bg-light: #ffffff;
-    --card-bg-dark: #1e293b;
-    --text-light: #1e293b;
-    --text-dark: #e2e8f0;
-    --border-light: #e2e8f0;
-    --border-dark: #334155;
-    --transition-speed: 0.3s;
+    --card-bg-dark: #111827;
+
+    --text-light: #111827;
+    --text-dark: #e5e7eb;
+
+    --border-light: #e5e7eb;
+    --border-dark: #374151;
 }
 
 /* Base Styles */
@@ -47,7 +47,7 @@ body.dark-mode {
     left: 0;
     width: var(--sidebar-width);
     height: 100vh;
-    background: linear-gradient(180deg, #4f46e5 0%, #7c3aed 100%);
+    background: #111827;
     color: white;
     z-index: 1000;
     transition: transform var(--transition-speed) ease;
@@ -57,7 +57,7 @@ body.dark-mode {
 }
 
 body.dark-mode .sidebar {
-    background: linear-gradient(180deg, #1e1b4b 0%, #312e81 100%);
+    background: #020617;
 }
 
 .sidebar.collapsed {
@@ -194,10 +194,10 @@ body.dark-mode .toggle-btn {
 
 /* Dashboard Cards */
 .stat-card {
-    background-color: var(--card-bg-light);
+   background-color: #ffffff;
     border-radius: 16px;
     padding: 1.5rem;
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
     transition: transform var(--transition-speed), box-shadow var(--transition-speed);
     border: 1px solid var(--border-light);
 }
@@ -205,12 +205,12 @@ body.dark-mode .toggle-btn {
 body.dark-mode .stat-card {
     background-color: var(--card-bg-dark);
     border-color: var(--border-dark);
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+    box-shadow: 0 2px 10px rgba(255, 255, 255, 0.05);
 }
 
 .stat-card:hover {
     transform: translateY(-5px);
-    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
 }
 
 .stat-card .icon {
@@ -264,7 +264,7 @@ body.dark-mode .stat-card {
     background-color: var(--card-bg-light);
     border-radius: 16px;
     padding: 2rem;
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
     border: 1px solid var(--border-light);
 }
 
@@ -296,21 +296,16 @@ body.dark-mode .form-select {
 
 .form-control:focus, .form-select:focus {
     border-color: var(--primary-color);
-    box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.2);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
 }
 
 .btn-primary {
-    background: linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%);
+    background: #111827;
     border: none;
-    border-radius: 10px;
-    padding: 0.75rem 1.5rem;
-    font-weight: 600;
-    transition: transform var(--transition-speed), box-shadow var(--transition-speed);
 }
 
 .btn-primary:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 4px 15px rgba(79, 70, 229, 0.4);
+    background: #374151;
 }
 
 /* Transaction List */
@@ -333,7 +328,7 @@ body.dark-mode .transaction-item {
 
 .transaction-item:hover {
     transform: translateX(5px);
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
 }
 
 .transaction-item.income {
@@ -406,7 +401,7 @@ body.dark-mode .transaction-item {
     background-color: var(--card-bg-light);
     border-radius: 16px;
     padding: 1.5rem;
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
     border: 1px solid var(--border-light);
 }
 
