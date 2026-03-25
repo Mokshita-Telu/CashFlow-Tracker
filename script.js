@@ -18,6 +18,8 @@ let openingBalance = 0;
  */
 function loadTransactions() {
     const stored = localStorage.getItem('cashflow_transactions');
+    const storedBalance = localStorage.getItem('cashflow_openingBalance');
+
     if (stored) {
         try {
             transactions = JSON.parse(stored);
@@ -26,6 +28,10 @@ function loadTransactions() {
             transactions = [];
         }
     }
+
+    if (storedBalance) {
+        openingBalance = parseFloat(storedBalance);
+    }
 }
 
 /**
@@ -33,6 +39,7 @@ function loadTransactions() {
  */
 function saveTransactions() {
     localStorage.setItem('cashflow_transactions', JSON.stringify(transactions));
+    localStorage.setItem('cashflow_openingBalance', openingBalance);
 }
 
 /**
@@ -171,7 +178,7 @@ function updateDashboard() {
         .filter(t => t.type === 'expense')
         .reduce((sum, t) => sum + parseFloat(t.amount), 0);
     
-    const balance = totalIncome - totalExpenses;
+    const balance = openingBalance + totalIncome - totalExpenses;
     
     // Update DOM
     document.getElementById('totalBalance').textContent = formatCurrency(balance);
@@ -779,6 +786,25 @@ document.addEventListener('DOMContentLoaded', function() {
             closeSidebar();
         }
     });
+
+    // Opening Balance Setup
+const openingInput = document.getElementById('openingBalanceInput');
+const saveBtn = document.getElementById('saveOpeningBalance');
+
+if (openingInput && saveBtn) {
+    openingInput.value = openingBalance;
+
+    saveBtn.addEventListener('click', function () {
+        const value = parseFloat(openingInput.value);
+
+        if (!isNaN(value)) {
+            openingBalance = value;
+            saveTransactions();
+            updateDashboard();
+            alert('Opening balance saved!');
+        }
+    });
+}
 });
 
 // Make functions globally available for onclick handlers
